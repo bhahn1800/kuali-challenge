@@ -21,11 +21,16 @@ public final class ElevatorSimulator {
     public static void main(String[] args) {
         // validate arguments here
 
-        Integer numberOfElevators = Integer.parseInt(args[0]);
-        Integer numberOfFloors = Integer.parseInt(args[1]);
+//        Integer numberOfElevators = Integer.parseInt(args[0]);
+//        Integer numberOfFloors = Integer.parseInt(args[1]);
+
+        // just hard-code for testing
+        Integer numberOfElevators = 2;
+        Integer numberOfFloors = 8;
 
         ElevatorController elevatorController = new ElevatorController(numberOfElevators, numberOfFloors);
         elevatorController.request(1, 5);
+//        elevatorController.moveElevators();
     }
 
 }

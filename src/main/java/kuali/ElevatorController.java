@@ -38,37 +38,60 @@ public class ElevatorController {
         this.elevatorList = new ArrayList<>();
 
         for (int i = 0; i < numElevators; i++) {
-            this.elevatorList.add(new Elevator());
+            this.elevatorList.add(new Elevator(i));
         }
+    }
+
+    private void moveElevators() {
+
     }
 
     public void request(int fromFloor, int toFloor) {
         if (toFloor > numFloors) throw new IllegalArgumentException(toFloor + " exceeds the max floor count of " + numFloors);
         if (fromFloor == toFloor) throw new IllegalArgumentException("cannot request the floor that you are currently on");
 
-        Elevator closestUnoccupied = getClosestUnoccupied(fromFloor);
-        Elevator occupiedApproaching = getOccupiedApproaching(fromFloor, toFloor);
+        Elevator elevator = getElevator(fromFloor, toFloor);
+        if (elevator == null) {
+            System.err.println("no available elevators - please call the service technician");
+        }
     }
 
-    private Elevator getOccupiedApproaching(int fromFloor, int toFloor) {
-        boolean goingUp = (toFloor > fromFloor);
-        Elevator occupiedApproaching = null;
+    private Elevator getElevator(int fromFloor, int toFloor) {
+        Elevator unoccupiedOnCurrentFloor = getUnoccupiedOnCurrentFloor(fromFloor);
+        if (unoccupiedOnCurrentFloor != null) {
+            if (!unoccupiedOnCurrentFloor.isInMaintenanceMode()) {
+                return unoccupiedOnCurrentFloor;
+            }
+        }
 
+        Elevator occupiedApproaching = getOccupiedApproaching(fromFloor, toFloor);
+        if (occupiedApproaching != null) {
+            if (!occupiedApproaching.isInMaintenanceMode()) {
+                return occupiedApproaching;
+            }
+        }
+
+        Elevator closestUnoccupied = getClosestUnoccupied(fromFloor);
+        if (closestUnoccupied != null) {
+            if (!closestUnoccupied.isInMaintenanceMode()) {
+                return closestUnoccupied;
+            }
+        }
+
+        return null;
+    }
+
+    private Elevator getUnoccupiedOnCurrentFloor(int fromFloor) {
         for (Elevator elevator : elevatorList) {
-            if (elevator.isOccupied()) {
-                if (goingUp) {
-                    if (elevator.isGoingUp()) {
-
-                    }
-                } else {
-                    if (!elevator.isGoingUp()) {
-
-                    }
+            if (!elevator.isOccupied()) {
+                // if already on current floor, then highest priority
+                if (elevator.getCurrentFloor() == fromFloor) {
+                    return elevator;
                 }
             }
         }
 
-        return occupiedApproaching;
+        return null;
     }
 
     private Elevator getClosestUnoccupied(int fromFloor) {
@@ -76,12 +99,6 @@ public class ElevatorController {
 
         for (Elevator elevator : elevatorList) {
             if (!elevator.isOccupied()) {
-                // if already on current floor, then highest priority
-                if (elevator.getCurrentFloor() == fromFloor) {
-                    closest = elevator;
-                    break;
-                }
-
                 if (closest == null) {
                     closest = elevator;
                 } else {
@@ -97,6 +114,37 @@ public class ElevatorController {
         }
 
         return closest;
+    }
+
+    private Elevator getOccupiedApproaching(int fromFloor, int toFloor) {
+        boolean goingUp = (toFloor > fromFloor);
+        Elevator occupiedApproaching = null;
+
+        for (Elevator elevator : elevatorList) {
+            if (elevator.isOccupied()) {
+                if (goingUp) {
+                    if (elevator.isGoingUp()) {
+                        if (elevator.getCurrentFloor() >= fromFloor) {
+                            if (elevator.getDestinationFloor() <= toFloor) {
+                                occupiedApproaching = elevator;
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    if (!elevator.isGoingUp()) {
+                        if (elevator.getCurrentFloor() <= fromFloor) {
+                            if (elevator.getDestinationFloor() >= toFloor) {
+                                occupiedApproaching = elevator;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return occupiedApproaching;
     }
 
 }

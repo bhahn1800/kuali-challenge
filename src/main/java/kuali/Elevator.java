@@ -22,11 +22,23 @@ package kuali;
  */
 public class Elevator {
 
+    public static enum DoorStatus {
+        Opening, Shut, Closing
+    }
+
+    private int elevatorId;
     private boolean isDoorsOpened;
     private boolean isOccupied;
     private boolean isGoingUp;
     private int currentFloor = 1;
     private int destinationFloor = 1;
+
+    private int tripCount;
+    private int floorCount;
+
+    public Elevator(int elevatorId) {
+        this.elevatorId = elevatorId;
+    }
 
     public boolean isOccupied() {
         return isOccupied;
@@ -59,4 +71,13 @@ public class Elevator {
     public void setDestinationFloor(int destinationFloor) {
         this.destinationFloor = destinationFloor;
     }
+
+    public boolean isInMaintenanceMode() {
+        return (tripCount >= 100);
+    }
+
+    public void report() {
+        System.out.println("Elevator " + elevatorId + " currently on floor " + currentFloor);
+    }
+
 }
