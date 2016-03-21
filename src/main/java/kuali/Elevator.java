@@ -1,5 +1,8 @@
 package kuali;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Initialize the elevator simulation with the desired number of elevators, and the desired
  number of floors. Assume ground/min of 1.
@@ -27,9 +30,11 @@ public class Elevator {
     }
 
     private int elevatorId;
-    private DoorStatus doorStatus;
+    private DoorStatus doorStatus = DoorStatus.Close;
     private int currentFloor = 1;
+
     private Integer destinationFloor;
+    private Set<Integer> stops = new HashSet<>();
 
     private int tripCount;
     private int floorCount;
@@ -51,13 +56,12 @@ public class Elevator {
         this.floorCount++;
 
         if (DoorStatus.Open.equals(doorStatus)) {
-            System.out.println("Elevator " + elevatorId + " :: shutting doors ");
+            System.out.println("Elevator " + elevatorId + " :: shutting doors :: (total floor count = " + floorCount + ", trip count = " + tripCount + ")");
             doorStatus = DoorStatus.Close;
         }
 
-        System.out.println("Elevator " + elevatorId + " :: moving up to floor " + currentFloor);
-
-        validateTrip();
+        System.out.println("Elevator " + elevatorId + " :: moving up to floor " + currentFloor + " :: (total floor count = " + floorCount + ", trip count = " + tripCount + ")");
+                validateTrip();
 
         return currentFloor;
     }
@@ -67,11 +71,11 @@ public class Elevator {
         this.floorCount++;
 
         if (DoorStatus.Open.equals(doorStatus)) {
-            System.out.println("Elevator " + elevatorId + " :: shutting doors ");
+            System.out.println("Elevator " + elevatorId + " :: shutting doors (total floor count = " + floorCount + ", trip count = " + tripCount + ")");
             doorStatus = DoorStatus.Close;
         }
 
-        System.out.println("Elevator " + elevatorId + " :: moving down to floor " + currentFloor);
+        System.out.println("Elevator " + elevatorId + " :: moving down to floor " + currentFloor + " :: (total floor count = " + floorCount + ", trip count = " + tripCount + ")");
 
         validateTrip();
 
@@ -80,11 +84,12 @@ public class Elevator {
 
     private void validateTrip() {
         if (currentFloor == destinationFloor) {
-            System.out.println("Elevator " + elevatorId + " :: opening doors ");
+            tripCount++;
+
+            System.out.println("Elevator " + elevatorId + " :: opening doors (total floor count = " + floorCount + ", trip count = " + tripCount + ")");
+
             doorStatus = DoorStatus.Open;
             destinationFloor = null;
-
-            tripCount++;
         }
     }
 
@@ -98,6 +103,10 @@ public class Elevator {
 
     public void setDestinationFloor(int destinationFloor) {
         this.destinationFloor = destinationFloor;
+    }
+
+    public void addStop(int stopFloor) {
+        this.stops.add(stopFloor);
     }
 
     public boolean isInMaintenanceMode() {

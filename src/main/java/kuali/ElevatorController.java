@@ -158,18 +158,20 @@ public class ElevatorController {
             if (elevator.isOccupied()) {
                 if (goingUp) {
                     if (elevator.isGoingUp()) {
-                        if (elevator.getCurrentFloor() >= fromFloor) {
-                            if (elevator.getDestinationFloor() <= toFloor) {
+                        if (elevator.getCurrentFloor() <= fromFloor) {
+                            if (elevator.getDestinationFloor() >= toFloor) {
                                 occupiedApproaching = elevator;
+                                occupiedApproaching.addStop(toFloor);
                                 break;
                             }
                         }
                     }
                 } else {
                     if (!elevator.isGoingUp()) {
-                        if (elevator.getCurrentFloor() <= fromFloor) {
-                            if (elevator.getDestinationFloor() >= toFloor) {
+                        if (elevator.getCurrentFloor() >= fromFloor) {
+                            if (elevator.getDestinationFloor() <= toFloor) {
                                 occupiedApproaching = elevator;
+                                occupiedApproaching.addStop(toFloor);
                                 break;
                             }
                         }
