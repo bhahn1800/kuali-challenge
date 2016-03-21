@@ -74,6 +74,7 @@ public class ElevatorController {
 
     public void request(int fromFloor, int toFloor) {
         if (toFloor > numFloors) throw new IllegalArgumentException(toFloor + " exceeds the max floor count of " + numFloors);
+        if (fromFloor > numFloors) throw new IllegalArgumentException(fromFloor + " exceeds the max floor count of " + numFloors);
         if (fromFloor == toFloor) throw new IllegalArgumentException("cannot request the floor that you are currently on");
 
         Elevator elevator = getElevator(fromFloor, toFloor);
