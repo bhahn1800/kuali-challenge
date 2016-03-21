@@ -27,6 +27,7 @@ public class ElevatorController {
     private int numFloors;
 
     private List<Elevator> elevatorList;
+    private List<Elevator> activeElevators;
 
     public ElevatorController(int numElevators, int numFloors) {
         this.numElevators = numElevators;
@@ -36,14 +37,29 @@ public class ElevatorController {
 
     private void start() {
         this.elevatorList = new ArrayList<>();
+        this.activeElevators = new ArrayList<>();
 
         for (int i = 0; i < numElevators; i++) {
             this.elevatorList.add(new Elevator(i));
         }
     }
 
-    private void moveElevators() {
+    public void moveElevators() {
+        for (Elevator elevator : activeElevators) {
+            move(elevator);
+        }
+    }
 
+    private void move(Elevator elevator) {
+        if (elevator.isGoingUp()) {
+            if (elevator.getCurrentFloor() < numFloors) {
+                elevator.incFloor();
+            }
+        } else {
+            if (elevator.getCurrentFloor() > 1) {
+                elevator.decFloor();
+            }
+        }
     }
 
     public void request(int fromFloor, int toFloor) {
@@ -53,7 +69,10 @@ public class ElevatorController {
         Elevator elevator = getElevator(fromFloor, toFloor);
         if (elevator == null) {
             System.err.println("no available elevators - please call the service technician");
+            return;
         }
+
+        activeElevators.add(elevator);
     }
 
     private Elevator getElevator(int fromFloor, int toFloor) {

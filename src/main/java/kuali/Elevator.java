@@ -23,11 +23,11 @@ package kuali;
 public class Elevator {
 
     public static enum DoorStatus {
-        Opening, Shut, Closing
+        Opening, Closing
     }
 
     private int elevatorId;
-    private boolean isDoorsOpened;
+    private DoorStatus doorStatus;
     private boolean isOccupied;
     private boolean isGoingUp;
     private int currentFloor = 1;
@@ -52,8 +52,44 @@ public class Elevator {
         return currentFloor;
     }
 
-    public void setCurrentFloor(int currentFloor) {
-        this.currentFloor = currentFloor;
+    public int incFloor() {
+        this.currentFloor++;
+        this.floorCount++;
+
+        if (DoorStatus.Opening.equals(doorStatus)) {
+            System.out.println("Elevator " + elevatorId + " :: shutting doors ");
+        }
+
+        System.out.println("Elevator " + elevatorId + " :: moving up to floor " + currentFloor);
+
+        if (currentFloor == destinationFloor) {
+            System.out.println("Elevator " + elevatorId + " :: opening doors ");
+            doorStatus = DoorStatus.Opening;
+
+            tripCount++;
+        }
+
+        return currentFloor;
+    }
+
+    public int decFloor() {
+        this.currentFloor--;
+        this.floorCount++;
+
+        if (DoorStatus.Opening.equals(doorStatus)) {
+            System.out.println("Elevator " + elevatorId + " :: shutting doors ");
+        }
+
+        System.out.println("Elevator " + elevatorId + " :: moving down to floor " + currentFloor);
+
+        if (currentFloor == destinationFloor) {
+            System.out.println("Elevator " + elevatorId + " :: opening doors ");
+            doorStatus = DoorStatus.Opening;
+
+            tripCount++;
+        }
+
+        return currentFloor;
     }
 
     public boolean isGoingUp() {

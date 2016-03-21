@@ -29,8 +29,10 @@ public final class ElevatorSimulator {
         Integer numberOfFloors = 8;
 
         ElevatorController elevatorController = new ElevatorController(numberOfElevators, numberOfFloors);
+
+        elevatorController.moveElevators();
         elevatorController.request(1, 5);
-//        elevatorController.moveElevators();
+        elevatorController.moveElevators();
     }
 
 }
