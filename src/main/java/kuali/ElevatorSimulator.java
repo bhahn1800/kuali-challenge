@@ -5,10 +5,10 @@ import java.util.Random;
 public final class ElevatorSimulator {
 
     public static void main(String[] args) {
-//        runLightLoad();
+        runLightLoad();
 //        runMediumLoad();
 //        runHeavyLoad();
-        runSingleElevator();
+//        runSingleElevator();
     }
 
     private static void runLightLoad() {
@@ -20,9 +20,7 @@ public final class ElevatorSimulator {
         elevatorController.moveElevators(2);
         elevatorController.request(1, 4);
         elevatorController.moveElevators(1);
-        elevatorController.request(3, 2);
-        elevatorController.moveElevators(1);
-        elevatorController.request(1, 3);
+        elevatorController.request(4, 2);
         elevatorController.moveElevators(10);
     }
 
@@ -96,13 +94,9 @@ public final class ElevatorSimulator {
 
         ElevatorController elevatorController = new ElevatorController(numberOfElevators, numberOfFloors);
 
-        System.out.println("1");
         elevatorController.request(1, 10);
-        System.out.println("2");
         elevatorController.moveElevators(1);
-        System.out.println("3");
         elevatorController.request(3, 8);
-        System.out.println("4");
         elevatorController.moveElevators(10);
     }
 

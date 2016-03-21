@@ -34,7 +34,7 @@ public class Elevator {
     private int currentFloor = 1;
 
     private Integer destinationFloor;
-    private Set<Integer> stops = new HashSet<>();
+    private Set<TripStop> stops = new HashSet<>();
 
     private int tripCount;
     private int floorCount;
@@ -52,44 +52,56 @@ public class Elevator {
     }
 
     public int incFloor() {
-        this.currentFloor++;
-        this.floorCount++;
-
         if (DoorStatus.Open.equals(doorStatus)) {
             System.out.println("Elevator " + elevatorId + " :: shutting doors :: (total floor count = " + floorCount + ", trip count = " + tripCount + ")");
             doorStatus = DoorStatus.Close;
         }
 
+        this.currentFloor++;
+        this.floorCount++;
+
         System.out.println("Elevator " + elevatorId + " :: moving up to floor " + currentFloor + " :: (total floor count = " + floorCount + ", trip count = " + tripCount + ")");
-                validateTrip();
+        updateStatus();
 
         return currentFloor;
     }
 
     public int decFloor() {
-        this.currentFloor--;
-        this.floorCount++;
-
         if (DoorStatus.Open.equals(doorStatus)) {
             System.out.println("Elevator " + elevatorId + " :: shutting doors (total floor count = " + floorCount + ", trip count = " + tripCount + ")");
             doorStatus = DoorStatus.Close;
         }
 
+        this.currentFloor--;
+        this.floorCount++;
+
         System.out.println("Elevator " + elevatorId + " :: moving down to floor " + currentFloor + " :: (total floor count = " + floorCount + ", trip count = " + tripCount + ")");
 
-        validateTrip();
+        updateStatus();
 
         return currentFloor;
     }
 
-    private void validateTrip() {
+    private void updateStatus() {
+        for (TripStop stop : stops) {
+            if (stop.getFloorStart() == currentFloor) {
+                System.out.println("Elevator " + elevatorId + " :: opening doors (total floor count = " + floorCount + ", trip count = " + tripCount + ")");
+                doorStatus = DoorStatus.Open;
+            } else if (stop.getFloorStop() == currentFloor) {
+                System.out.println("Elevator " + elevatorId + " :: opening doors (total floor count = " + floorCount + ", trip count = " + tripCount + ")");
+                doorStatus = DoorStatus.Open;
+            }
+        }
+
         if (currentFloor == destinationFloor) {
             tripCount++;
 
-            System.out.println("Elevator " + elevatorId + " :: opening doors (total floor count = " + floorCount + ", trip count = " + tripCount + ")");
+            if (DoorStatus.Close.equals(doorStatus))
+                System.out.println("Elevator " + elevatorId + " :: opening doors (total floor count = " + floorCount + ", trip count = " + tripCount + ")");
 
             doorStatus = DoorStatus.Open;
             destinationFloor = null;
+            stops.clear();
         }
     }
 
@@ -105,8 +117,8 @@ public class Elevator {
         this.destinationFloor = destinationFloor;
     }
 
-    public void addStop(int stopFloor) {
-        this.stops.add(stopFloor);
+    public void addStop(TripStop stop) {
+        this.stops.add(stop);
     }
 
     public boolean isInMaintenanceMode() {

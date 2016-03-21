@@ -79,11 +79,17 @@ public class ElevatorController {
 
         Elevator elevator = getElevator(fromFloor, toFloor);
         if (elevator == null) {
-            System.err.println("no available elevators - please call the service technician");
+            if (activeElevators.isEmpty()) {
+                System.err.println("no available elevators - please call the service technician");
+            } else {
+                System.out.println("no available elevators - please request again at a later time");
+            }
             return;
         }
 
-        elevator.setDestinationFloor(toFloor);
+        if (elevator.getDestinationFloor() == null) {
+            elevator.setDestinationFloor(toFloor);
+        }
 
         if (!activeElevators.contains(elevator)) {
             activeElevators.add(elevator);
@@ -161,7 +167,7 @@ public class ElevatorController {
                         if (elevator.getCurrentFloor() <= fromFloor) {
                             if (elevator.getDestinationFloor() >= toFloor) {
                                 occupiedApproaching = elevator;
-                                occupiedApproaching.addStop(toFloor);
+                                occupiedApproaching.addStop(new TripStop(fromFloor, toFloor));
                                 break;
                             }
                         }
@@ -171,7 +177,7 @@ public class ElevatorController {
                         if (elevator.getCurrentFloor() >= fromFloor) {
                             if (elevator.getDestinationFloor() <= toFloor) {
                                 occupiedApproaching = elevator;
-                                occupiedApproaching.addStop(toFloor);
+                                occupiedApproaching.addStop(new TripStop(fromFloor, toFloor));
                                 break;
                             }
                         }
