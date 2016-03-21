@@ -26,5 +26,37 @@ public class Elevator {
     private boolean isOccupied;
     private boolean isGoingUp;
     private int currentFloor = 1;
+    private int destinationFloor = 1;
 
+    public boolean isOccupied() {
+        return isOccupied;
+    }
+
+    public void setOccupied(boolean isOccupied) {
+        this.isOccupied = isOccupied;
+    }
+
+    public int getCurrentFloor() {
+        return currentFloor;
+    }
+
+    public void setCurrentFloor(int currentFloor) {
+        this.currentFloor = currentFloor;
+    }
+
+    public boolean isGoingUp() {
+        return isGoingUp;
+    }
+
+    public void setGoingUp(boolean isGoingUp) {
+        this.isGoingUp = isGoingUp;
+    }
+
+    public int getDestinationFloor() {
+        return destinationFloor;
+    }
+
+    public void setDestinationFloor(int destinationFloor) {
+        this.destinationFloor = destinationFloor;
+    }
 }
