@@ -19,20 +19,23 @@ package kuali;
 public final class ElevatorSimulator {
 
     public static void main(String[] args) {
-        // validate arguments here
+        runSimple();
+    }
 
-//        Integer numberOfElevators = Integer.parseInt(args[0]);
-//        Integer numberOfFloors = Integer.parseInt(args[1]);
-
-        // just hard-code for testing
-        Integer numberOfElevators = 2;
-        Integer numberOfFloors = 8;
+    private static void runSimple() {
+        Integer numberOfElevators = 3;
+        Integer numberOfFloors = 10;
 
         ElevatorController elevatorController = new ElevatorController(numberOfElevators, numberOfFloors);
-
-        elevatorController.moveElevators();
         elevatorController.request(1, 5);
-        elevatorController.moveElevators();
+        elevatorController.moveElevators(2);
+        elevatorController.request(1, 7);
+        elevatorController.moveElevators(1);
+        elevatorController.request(6, 2);
+        elevatorController.moveElevators(1);
+        elevatorController.request(1, 3);
+        elevatorController.moveElevators(3);
+        elevatorController.request(1, 10);
     }
 
 }

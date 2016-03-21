@@ -23,15 +23,13 @@ package kuali;
 public class Elevator {
 
     public static enum DoorStatus {
-        Opening, Closing
+        Open, Close
     }
 
     private int elevatorId;
     private DoorStatus doorStatus;
-    private boolean isOccupied;
-    private boolean isGoingUp;
     private int currentFloor = 1;
-    private int destinationFloor = 1;
+    private Integer destinationFloor;
 
     private int tripCount;
     private int floorCount;
@@ -41,11 +39,7 @@ public class Elevator {
     }
 
     public boolean isOccupied() {
-        return isOccupied;
-    }
-
-    public void setOccupied(boolean isOccupied) {
-        this.isOccupied = isOccupied;
+        return destinationFloor != null && DoorStatus.Close.equals(doorStatus);
     }
 
     public int getCurrentFloor() {
@@ -56,18 +50,14 @@ public class Elevator {
         this.currentFloor++;
         this.floorCount++;
 
-        if (DoorStatus.Opening.equals(doorStatus)) {
+        if (DoorStatus.Open.equals(doorStatus)) {
             System.out.println("Elevator " + elevatorId + " :: shutting doors ");
+            doorStatus = DoorStatus.Close;
         }
 
         System.out.println("Elevator " + elevatorId + " :: moving up to floor " + currentFloor);
 
-        if (currentFloor == destinationFloor) {
-            System.out.println("Elevator " + elevatorId + " :: opening doors ");
-            doorStatus = DoorStatus.Opening;
-
-            tripCount++;
-        }
+        validateTrip();
 
         return currentFloor;
     }
@@ -76,31 +66,33 @@ public class Elevator {
         this.currentFloor--;
         this.floorCount++;
 
-        if (DoorStatus.Opening.equals(doorStatus)) {
+        if (DoorStatus.Open.equals(doorStatus)) {
             System.out.println("Elevator " + elevatorId + " :: shutting doors ");
+            doorStatus = DoorStatus.Close;
         }
 
         System.out.println("Elevator " + elevatorId + " :: moving down to floor " + currentFloor);
 
-        if (currentFloor == destinationFloor) {
-            System.out.println("Elevator " + elevatorId + " :: opening doors ");
-            doorStatus = DoorStatus.Opening;
-
-            tripCount++;
-        }
+        validateTrip();
 
         return currentFloor;
     }
 
+    private void validateTrip() {
+        if (currentFloor == destinationFloor) {
+            System.out.println("Elevator " + elevatorId + " :: opening doors ");
+            doorStatus = DoorStatus.Open;
+            destinationFloor = null;
+
+            tripCount++;
+        }
+    }
+
     public boolean isGoingUp() {
-        return isGoingUp;
+        return currentFloor < destinationFloor;
     }
 
-    public void setGoingUp(boolean isGoingUp) {
-        this.isGoingUp = isGoingUp;
-    }
-
-    public int getDestinationFloor() {
+    public Integer getDestinationFloor() {
         return destinationFloor;
     }
 
@@ -110,10 +102,6 @@ public class Elevator {
 
     public boolean isInMaintenanceMode() {
         return (tripCount >= 100);
-    }
-
-    public void report() {
-        System.out.println("Elevator " + elevatorId + " currently on floor " + currentFloor);
     }
 
 }

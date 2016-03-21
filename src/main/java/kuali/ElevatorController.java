@@ -1,6 +1,7 @@
 package kuali;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -40,13 +41,22 @@ public class ElevatorController {
         this.activeElevators = new ArrayList<>();
 
         for (int i = 0; i < numElevators; i++) {
-            this.elevatorList.add(new Elevator(i));
+            this.elevatorList.add(new Elevator(i + 1));
         }
     }
 
-    public void moveElevators() {
-        for (Elevator elevator : activeElevators) {
-            move(elevator);
+    public void moveElevators(int numMoves) {
+        for (int i = 0; i < numMoves; i++) {
+            Iterator<Elevator> elevatorIterator = activeElevators.iterator();
+
+            while (elevatorIterator.hasNext()) {
+                Elevator active = elevatorIterator.next();
+                move(active);
+
+                if (active.getDestinationFloor() == null) {
+                    elevatorIterator.remove();
+                }
+            }
         }
     }
 
@@ -72,7 +82,11 @@ public class ElevatorController {
             return;
         }
 
-        activeElevators.add(elevator);
+        elevator.setDestinationFloor(toFloor);
+
+        if (!activeElevators.contains(elevator)) {
+            activeElevators.add(elevator);
+        }
     }
 
     private Elevator getElevator(int fromFloor, int toFloor) {
